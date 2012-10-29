@@ -9,7 +9,9 @@ my $Builder = Module::Build->new(
     dist_author         => 'Tore Aursand <toreau@gmail.com>',
     dist_version_from   => 'lib/URL/Normalize.pm',
     build_requires => {
-        'Test::More' => 0,
+        'Test::More'      => 0,
+        'URI'             => 0,
+        'URI::QueryParam' => 0,
     },
     create_makefile_pl  => 'traditional',
 );

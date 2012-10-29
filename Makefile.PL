@@ -5,7 +5,9 @@ WriteMakefile
   'NAME' => 'URL::Normalize',
   'VERSION_FROM' => 'lib/URL/Normalize.pm',
   'PREREQ_PM' => {
-                   'Test::More' => 0
+                   'Test::More' => 0,
+                   'URI' => 0,
+                   'URI::QueryParam' => 0
                  },
   'INSTALLDIRS' => 'site',
   'EXE_FILES' => [],

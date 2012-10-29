@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -280,17 +280,100 @@ sub sort_query_parameters {
     return $self->_set_url( $URI->as_string() );
 }
 
+=head2 remove_empty_query()
+
+Removes empty query from the URL.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/foo?',
+    );
+
+    $Normalizer->remove_empty_query();
+
+    print $Normalize->get_url(); # http://www.example.com/foo
+
+=cut
+
+sub remove_empty_query {
+    my $self = shift;
+
+    my $url = $self->get_url();
+
+    $url =~ s,\?$,,;
+
+    #
+    # Set new 'url' value
+    #
+    $self->_set_url( $url );
+}
+
+=head2 remove_fragment()
+
+Removes fragments from the URL. This is dangerous, as lot of AJAX-ified
+applications uses this part.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/bar.html#section1',
+    );
+
+    $Normalizer->remove_fragment();
+
+    print $Normalizer->get_url(); # http://www.example.com/bar.html
+
+=cut
+
+sub remove_fragment {
+    my $self = shift;
+
+    my $url = $self->get_url();
+
+    $url =~ s,#.*,,;
+
+    #
+    # Set new 'url' value
+    #
+    $self->_set_url( $url );
+}
+
+=head2 remove_duplicate_slashes()
+
+Remove duplicate slashes from the URL.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/foo//bar.html',
+    );
+
+    $Normalizer->remove_duplicate_slashes();
+
+    print $Normalizer->get_url(); # http://www.example.com/foo/bar.html
+
+=cut
+
+sub remove_duplicate_slashes {
+    my $self = shift;
+
+    my $URI  = $self->get_URI();
+    my $path = $URI->path();
+
+    $path =~ s,/+,/,g;
+
+    $URI->path( $path );
+
+    #
+    # Set new 'url' value
+    #
+    $self->_set_url( $URI->as_string() );
+}
+
 =head2 do_all()
 
-Performs all of the normalization methods;
-
-    * make_canonical()
-
-    * remove_dot_segments()
-
-    * remove_directory_index()
-
-    * sort_query_parameters()
+Performs all of the normalization methods.
 
 =cut
 
@@ -301,6 +384,9 @@ sub do_all {
     $self->remove_dot_segments();
     $self->remove_directory_index();
     $self->sort_query_parameters();
+    $self->remove_empty_query();
+    $self->remove_fragment();
+    $self->remove_duplicate_slashes();
 
     return 1;
 }

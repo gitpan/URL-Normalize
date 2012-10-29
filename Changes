@@ -1,4 +1,10 @@
 Revision history for URL-Normalize
 
+0.02    2012-10-29
+        - Added remove_empty_query() method.
+        - Added remove_fragment() method.
+        - Added remove_duplicate_slashes() method.
+        - Added more tests.
+
 0.01    2012-10-29
         - First release.

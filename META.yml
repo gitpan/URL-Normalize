@@ -4,6 +4,8 @@ author:
   - 'Tore Aursand <toreau@gmail.com>'
 build_requires:
   Test::More: 0
+  URI: 0
+  URI::QueryParam: 0
 configure_requires:
   Module::Build: 0.40
 dynamic_config: 1
@@ -16,7 +18,7 @@ name: URL-Normalize
 provides:
   URL::Normalize:
     file: lib/URL/Normalize.pm
-    version: 0.01
+    version: 0.02
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01
+version: 0.02
