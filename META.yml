@@ -18,7 +18,7 @@ name: URL-Normalize
 provides:
   URL::Normalize:
     file: lib/URL/Normalize.pm
-    version: 0.03
+    version: 0.04
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.03
+version: 0.04

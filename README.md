@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.03
+Version 0.04
 
 # SYNOPSIS
 
@@ -45,13 +45,10 @@ Constructs a new URL::Normalizer object. Takes a hash as input argument;
 Just a shortcut for URI::URL->new()->canonical()->as\_string(), and involves
 the following steps (at least):
 
-    * Converts the scheme and host to lower case.
-
-    * Capitalizes letters in escape sequences.
-
-    * Decodes percent-encoded octets of unreserved characters.
-
-    * Removes the default port (port 80 for http).
+- Converts the scheme and host to lower case.
+- Capitalizes letters in escape sequences.
+- Decodes percent-encoded octets of unreserved characters.
+- Removes the default port (port 80 for http).
 
 Example:
 
@@ -87,7 +84,7 @@ Removes well-known directory indexes, eg. "index.html", "default.asp" etc.
 Sorts the query parameters alphabetically.
 
 Uppercased parameters will be lower cased during sorting only, and if there are
-multiple values for a parameters, the key/value-pairs will be sorted as well.
+multiple values for a parameter, the key/value-pairs will be sorted as well.
 
 Example:
 
@@ -148,15 +145,16 @@ Performs all of the normalization methods.
 
 # SEE ALSO
 
-[URI](http://search.cpan.org/perldoc?URI)
+- [URI](http://search.cpan.org/perldoc?URI)
+- [URI::URL](http://search.cpan.org/perldoc?URI::URL)
+- [URI::QueryParam](http://search.cpan.org/perldoc?URI::QueryParam)
+- RFC 3986: Uniform Resource Indentifier
 
-[URI::URL](http://search.cpan.org/perldoc?URI::URL)
+    [http://tools.ietf.org/html/rfc3986](http://tools.ietf.org/html/rfc3986)
 
-[URI::QueryParam](http://search.cpan.org/perldoc?URI::QueryParam)
+- Wikipedia: URL normalization
 
-[RFC 3986: Uniform Resource Indentifier](http://tools.ietf.org/html/rfc3986)
-
-[Wikipedia: URL normalization](http://en.wikipedia.org/wiki/URL\_normalization)
+    [http://en.wikipedia.org/wiki/URL\_normalization](http://en.wikipedia.org/wiki/URL\_normalization)
 
 # AUTHOR
 
