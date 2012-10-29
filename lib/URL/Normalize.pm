@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -246,8 +246,20 @@ sub remove_directory_index {
 
 =head2 sort_query_parameters()
 
-Sorts the query parameters alphabetically. Uppercased parameters will be
-lower cased during sorting only.
+Sorts the query parameters alphabetically.
+
+Uppercased parameters will be lower cased during sorting only, and if there are
+multiple values for a parameters, the key/value-pairs will be sorted as well.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/?b=2&c=3&a=0&A=1',
+    );
+
+    $Normalizer->sort_query_parameters();
+
+    print $Normalizer->get_url(); # http://www.example.com/?a=0&A=1&b=2&c=3
 
 =cut
 
@@ -256,8 +268,9 @@ sub sort_query_parameters {
 
     my $URI = $self->get_URI();
 
-    my $query_hash   = $URI->query_form_hash();
-    my $query_string = '';
+    my $query_hash     = $URI->query_form_hash();
+    my $query_string   = '';
+    my %new_query_hash = ();
 
     foreach my $key ( sort { lc($a) cmp lc($b) } keys %{$query_hash} ) {
         my $values = $query_hash->{ $key };
@@ -265,8 +278,16 @@ sub sort_query_parameters {
             $values = [ $values ];
         }
 
-        foreach my $value ( sort { lc($a) cmp lc($b) } @{$values} ) {
-            $query_string .= $key . '=' . $value . '&';
+        foreach my $value ( @{$values} ) {
+            push( @{ $new_query_hash{lc($key)}->{$value} }, $key );
+        }
+    }
+
+    foreach my $sort_key ( sort keys %new_query_hash ) {
+        foreach my $value ( sort keys %{$new_query_hash{$sort_key}} ) {
+            foreach my $key ( sort @{$new_query_hash{$sort_key}->{$value}} ) {
+                $query_string .= $key . '=' . $value . '&';
+            }
         }
     }
 
@@ -409,9 +430,7 @@ Tore Aursand, C<< <toreau at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-url-normalize at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=URL-Normalize>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to the web interface at L<https://github.com/toreau/url-normalize/issues/new>.
 
 =head1 SUPPORT
 
@@ -423,9 +442,9 @@ You can also look for information at:
 
 =over 4
 
-=item * RT: CPAN's request tracker (report bugs here)
+=item * github (report bugs here)
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=URL-Normalize>
+L<https://github.com/toreau/url-normalize/issues>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 

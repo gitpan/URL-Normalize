@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.01
+Version 0.03
 
 # SYNOPSIS
 
@@ -84,20 +84,67 @@ Removes well-known directory indexes, eg. "index.html", "default.asp" etc.
 
 ## sort\_query\_parameters()
 
-Sorts the query parameters alphabetically. Uppercased parameters will be
-lower cased during sorting only.
+Sorts the query parameters alphabetically.
+
+Uppercased parameters will be lower cased during sorting only, and if there are
+multiple values for a parameters, the key/value-pairs will be sorted as well.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/?b=2&c=3&a=0&A=1',
+    );
+
+    $Normalizer->sort_query_parameters();
+
+    print $Normalizer->get_url(); # http://www.example.com/?a=0&A=1&b=2&c=3
+
+## remove\_empty\_query()
+
+Removes empty query from the URL.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/foo?',
+    );
+
+    $Normalizer->remove_empty_query();
+
+    print $Normalize->get_url(); # http://www.example.com/foo
+
+## remove\_fragment()
+
+Removes fragments from the URL. This is dangerous, as lot of AJAX-ified
+applications uses this part.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/bar.html#section1',
+    );
+
+    $Normalizer->remove_fragment();
+
+    print $Normalizer->get_url(); # http://www.example.com/bar.html
+
+## remove\_duplicate\_slashes()
+
+Remove duplicate slashes from the URL.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/foo//bar.html',
+    );
+
+    $Normalizer->remove_duplicate_slashes();
+
+    print $Normalizer->get_url(); # http://www.example.com/foo/bar.html
 
 ## do\_all()
 
-Performs all of the normalization methods;
-
-    * make_canonical()
-
-    * remove_dot_segments()
-
-    * remove_directory_index()
-
-    * sort_query_parameters()
+Performs all of the normalization methods.
 
 # SEE ALSO
 
@@ -117,9 +164,7 @@ Tore Aursand, `<toreau at gmail.com>`
 
 # BUGS
 
-Please report any bugs or feature requests to `bug-url-normalize at rt.cpan.org`, or through
-the web interface at [http://rt.cpan.org/NoAuth/ReportBug.html?Queue=URL-Normalize](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=URL-Normalize).  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to the web interface at [https://github.com/toreau/url-normalize/issues/new](https://github.com/toreau/url-normalize/issues/new).
 
 # SUPPORT
 
@@ -129,9 +174,9 @@ You can find documentation for this module with the perldoc command.
 
 You can also look for information at:
 
-- RT: CPAN's request tracker (report bugs here)
+- github (report bugs here)
 
-    [http://rt.cpan.org/NoAuth/Bugs.html?Dist=URL-Normalize](http://rt.cpan.org/NoAuth/Bugs.html?Dist=URL-Normalize)
+    [https://github.com/toreau/url-normalize/issues](https://github.com/toreau/url-normalize/issues)
 
 - AnnoCPAN: Annotated CPAN documentation
 
