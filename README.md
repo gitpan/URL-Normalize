@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.04
+Version 0.05
 
 # SYNOPSIS
 
@@ -31,7 +31,7 @@ Version 0.04
 
 ## new( %opts )
 
-Constructs a new URL::Normalizer object. Takes a hash as input argument;
+Constructs a new URL::Normalize object. Takes a hash as input argument;
 
     my $Normalizer = URL::Normalize->new(
         url  => '/foobar.html',            # required
@@ -78,6 +78,16 @@ Example:
 ## remove\_directory\_index()
 
 Removes well-known directory indexes, eg. "index.html", "default.asp" etc.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/index.cgi?foo=/',
+    );
+
+    $Normalizer->remove_directory_index();
+
+    print $Normalizer->get_url(); # http://www.example.com/?foo=/
 
 ## sort\_query\_parameters()
 
@@ -141,20 +151,15 @@ Example:
 
 ## do\_all()
 
-Performs all of the normalization methods.
+Performs all of the normalization methods mentioned above.
 
 # SEE ALSO
 
 - [URI](http://search.cpan.org/perldoc?URI)
 - [URI::URL](http://search.cpan.org/perldoc?URI::URL)
 - [URI::QueryParam](http://search.cpan.org/perldoc?URI::QueryParam)
-- RFC 3986: Uniform Resource Indentifier
-
-    [http://tools.ietf.org/html/rfc3986](http://tools.ietf.org/html/rfc3986)
-
-- Wikipedia: URL normalization
-
-    [http://en.wikipedia.org/wiki/URL\_normalization](http://en.wikipedia.org/wiki/URL\_normalization)
+- [RFC 3986: Uniform Resource Indentifier](http://tools.ietf.org/html/rfc3986)
+- [Wikipedia: URL normalization](http://en.wikipedia.org/wiki/URL\_normalization)
 
 # AUTHOR
 

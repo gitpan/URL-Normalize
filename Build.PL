@@ -10,6 +10,7 @@ my $Builder = Module::Build->new(
     dist_version_from   => 'lib/URL/Normalize.pm',
     build_requires => {
         'Test::More'      => 0,
+        'Moose'           => 0,
         'URI'             => 0,
         'URI::QueryParam' => 0,
     },

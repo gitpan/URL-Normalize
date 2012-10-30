@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =cut
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -76,7 +76,7 @@ sub _build_URI {
 
 =head2 new( %opts )
 
-Constructs a new URL::Normalizer object. Takes a hash as input argument;
+Constructs a new URL::Normalize object. Takes a hash as input argument;
 
     my $Normalizer = URL::Normalize->new(
         url  => '/foobar.html',            # required
@@ -150,7 +150,16 @@ sub remove_dot_segments {
     my $old_path = $URI->path();
     my $new_path = '';
 
+    my $loop_cnt = 0;
+
     while ( length $old_path ) {
+        #
+        # Have we been running for too long?
+        #
+        if ( ++$loop_cnt > 1_000 ) {
+            Carp::croak( "remove_dot_segments() have been running for too long. Bailing out." );
+        }
+
         #
         # If the input buffer begins with a prefix of "../" or "./", then
         # remove that prefix from the input buffer;
@@ -218,6 +227,16 @@ sub remove_dot_segments {
 =head2 remove_directory_index()
 
 Removes well-known directory indexes, eg. "index.html", "default.asp" etc.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/index.cgi?foo=/',
+    );
+
+    $Normalizer->remove_directory_index();
+
+    print $Normalizer->get_url(); # http://www.example.com/?foo=/
 
 =cut
 
@@ -398,7 +417,7 @@ sub remove_duplicate_slashes {
 
 =head2 do_all()
 
-Performs all of the normalization methods.
+Performs all of the normalization methods mentioned above.
 
 =cut
 
@@ -426,13 +445,9 @@ sub do_all {
 
 =item * L<URI::QueryParam>
 
-=item * RFC 3986: Uniform Resource Indentifier
+=item * L<RFC 3986: Uniform Resource Indentifier|http://tools.ietf.org/html/rfc3986>
 
-L<http://tools.ietf.org/html/rfc3986>
-
-=item * Wikipedia: URL normalization
-
-L<http://en.wikipedia.org/wiki/URL_normalization>
+=item * L<Wikipedia: URL normalization|http://en.wikipedia.org/wiki/URL_normalization>
 
 =back
 

@@ -1,6 +1,12 @@
 Revision history for URL::Normalize
 
 
+0.05    2012-10-30
+        - Make sure remove_dot_segments() won't run for too long.
+        - Add Moose to dependencies. (tobyink)
+        - Improved the documentation.
+
+
 0.04    2012-10-29
         - Added more tests.
         - Improved the documentation.
