@@ -1,6 +1,13 @@
 Revision history for URL::Normalize
 
 
+0.06    2012-MM-DD
+        - Added remove_duplicate_query_parameters() method.
+        - Added remove_empty_query_parameters() method.
+        - Added more tests.
+        - Improved the documentation.
+
+
 0.05    2012-10-30
         - Make sure remove_dot_segments() won't run for too long.
         - Add Moose to dependencies. (tobyink)

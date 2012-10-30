@@ -12,6 +12,8 @@ t/40-sort-query-parameters.t
 t/50-remove-empty-query.t
 t/60-remove-fragment.t
 t/70-remove-duplicate-slashes.t
+t/80-remove-duplicate-query-parameters.t
+t/90-remove-empty-query-parameters.t
 t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t

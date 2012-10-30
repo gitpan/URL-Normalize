@@ -30,7 +30,7 @@ BEGIN {
 
         $Normalizer->remove_dot_segments();
 
-        ok( $Normalizer->get_url() eq $urls{$_} );
+        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url() );
     }
 }
 

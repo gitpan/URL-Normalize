@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -71,6 +71,40 @@ sub _build_URI {
     $Normalizer->do_all(); # Perform all the normalizations available
 
     print $Normalizer->get_url();
+
+=head1 DESCRIPTION
+
+This is NOT a perfect solution. If you normalize a URL using all the methods in
+this module, there is a high probability that the URL will "stop working". This
+is merely a helper module for those of you who wants to either normalize a URL
+using only a few of the safer methods, and/or for those of you who wants to
+generate a unique "ID" from any given URL.
+
+When writing a web crawler, for example, it's always very costly to check if a
+URL has been fetched/seen when you have millions or billions of URLs in a sort
+of database. This module can help you create a unique "ID", which you then can
+use as a key in a key/value-store; the key is the normalized URL, whereas all
+the URLs that converts to the normalized URL are part of the value (normally an
+array or hash);
+
+    'http://www.example.com/' = {
+        'http://www.example.com:80/'        => 1,
+        'http://www.example.com/index.html' => 1,
+        'http://www.example.com/?'          => 1,
+    }
+
+Above, all the URLs inside the has normalizes to the key if you run these
+methods:
+
+=over 4
+
+=item * C<make_canonical()>
+
+=item * C<remove_directory_index()>
+
+=item * C<remove_empty_query()>
+
+=back
 
 =head1 CONSTRUCTORS
 
@@ -324,6 +358,98 @@ sub sort_query_parameters {
     return $self->_set_url( $URI->as_string() );
 }
 
+=head2 remove_duplicate_query_parameters()
+
+Removes duplicate query parameters, ie. where the key/value combination is
+identical with another key/value combination.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/?a=1&a=2&b=4&a=1&c=4',
+    );
+
+    $Normalizer->remove_duplicate_query_parameters();
+
+    print $Normalizer->get_url(); # http://www.example.com/?a=1&a=2&b=3&c=4
+
+=cut
+
+sub remove_duplicate_query_parameters {
+    my $self = shift;
+
+    my $URI = $self->get_URI();
+
+    my %seen      = ();
+    my @new_query = ();
+
+    foreach my $key ( $URI->query_param() ) {
+        my @values = $URI->query_param( $key );
+        foreach my $value ( @values ) {
+            unless ( $seen{$key}->{$value} ) {
+                push( @new_query, { key => $key, value => $value } );
+                $seen{$key}->{$value}++;
+            }
+        }
+    }
+
+    my $query_string = '';
+    foreach ( @new_query ) {
+        $query_string .= $_->{key} . '=' . $_->{value} . '&';
+    }
+
+    $query_string =~ s,&$,,;
+
+    $URI->query( $query_string );
+
+    #
+    # Set new 'url' value
+    #
+    return $self->_set_url( $URI->as_string() );
+}
+
+=head2 remove_empty_query_parameters()
+
+Removes empty query parameters, ie. where there are keys with no value.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/?a=1&b=&c=3',
+    );
+
+    $Normalize->remove_empty_query_parameters();
+
+    print $Normalizer->get_url(); # http://www.example.com/?a=1&c=3
+
+=cut
+
+sub remove_empty_query_parameters {
+    my $self = shift;
+
+    my $URI = $self->get_URI();
+
+    my $query_string = '';
+
+    foreach my $key ( $URI->query_param() ) {
+        my @values = $URI->query_param( $key );
+        foreach my $value ( @values ) {
+            if ( defined $value && length $value ) {
+                $query_string .= $key . '=' . $value . '&';
+            }
+        }
+    }
+
+    $query_string =~ s,&$,,;
+
+    $URI->query( $query_string );
+
+    #
+    # Set new 'url' value
+    #
+    return $self->_set_url( $URI->as_string() );
+}
+
 =head2 remove_empty_query()
 
 Removes empty query from the URL.
@@ -431,6 +557,8 @@ sub do_all {
     $self->remove_empty_query();
     $self->remove_fragment();
     $self->remove_duplicate_slashes();
+    $self->remove_duplicate_query_parameters();
+    $self->remove_empty_query_parameters();
 
     return 1;
 }
