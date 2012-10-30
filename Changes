@@ -1,6 +1,13 @@
 Revision history for URL::Normalize
 
 
+0.08    2012-10-30
+        - Added the remove_hostname_prefix() method.
+        - Exposed the get_URI() method.
+        - Added more tests.
+        - Improved the documentation.
+
+
 0.07    2012-10-30
         - Renamed several of the tests' filename.
         - Improved the documentation.

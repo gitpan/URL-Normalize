@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.07
+Version 0.08
 
 =cut
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -120,6 +120,12 @@ Constructs a new URL::Normalize object. Takes a hash as input argument;
 =cut
 
 =head1 METHODS
+
+=head2 get_URI()
+
+Returns the C<URI> object representing the current state of the URL.
+
+=cut
 
 =head2 make_canonical()
 
@@ -540,6 +546,45 @@ sub remove_duplicate_slashes {
     $self->_set_url( $URI->as_string() );
 }
 
+=head2 remove_hostname_prefix()
+
+Removes 'www' followed by a potential number before the actual hostname.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/',
+    );
+
+    $Normalizer->remove_hostname_prefix();
+
+    print $Normalizer->get_url(); # http://example.com/
+
+=cut
+
+sub remove_hostname_prefix {
+    my $self = shift;
+
+    my $URI  = $self->get_URI();
+    my $host = $URI->host();
+
+    #
+    # Count the number of parts in the hostname. If it's more than two parts
+    # in the URL, it's safe (...) to remove the "www\d*?\." prefix.
+    #
+    my @parts = split( /\./, $host );
+
+    if ( scalar(@parts) > 2 ) {
+        $host =~ s,^www\d*?\.,,;
+        $URI->host( $host );
+    }
+
+    #
+    # Set new 'url' value
+    #
+    $self->_set_url( $URI->as_string() );
+}
+
 =head2 do_all()
 
 Performs all of the normalization methods mentioned above.
@@ -558,6 +603,7 @@ sub do_all {
     $self->remove_duplicate_slashes();
     $self->remove_duplicate_query_parameters();
     $self->remove_empty_query_parameters();
+    $self->remove_hostname_prefix();
 
     return 1;
 }
@@ -568,8 +614,9 @@ There's probably possible to improve the performance of this module
 considerably, but as premature optimization is evil, I'll wait until the
 functionality and API is stable.
 
-On my MacBook Pro (2.66GHz i7, 8GB RAM) I'm able to run the do_all() method on
-more than 1,100 URLs per second. That should be enough for everyone. :)
+On my MacBook Pro (2.66GHz i7, 8GB RAM) running Perl 5.14.2, I'm able to
+run the do_all() method on more than 1,100 URLs per second. This is just
+a number, as the performance depends on the complexity of the URL.
 
 =cut
 

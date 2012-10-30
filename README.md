@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.07
+Version 0.08
 
 # SYNOPSIS
 
@@ -67,6 +67,10 @@ Constructs a new URL::Normalize object. Takes a hash as input argument;
     );
 
 # METHODS
+
+## get\_URI()
+
+Returns the `URI` object representing the current state of the URL.
 
 ## make\_canonical()
 
@@ -205,6 +209,20 @@ Example:
 
     print $Normalizer->get_url(); # http://www.example.com/foo/bar.html
 
+## remove\_hostname\_prefix()
+
+Removes 'www' followed by a potential number before the actual hostname.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/',
+    );
+
+    $Normalizer->remove_hostname_prefix();
+
+    print $Normalizer->get_url(); # http://example.com/
+
 ## do\_all()
 
 Performs all of the normalization methods mentioned above.
@@ -215,8 +233,9 @@ There's probably possible to improve the performance of this module
 considerably, but as premature optimization is evil, I'll wait until the
 functionality and API is stable.
 
-On my MacBook Pro (2.66GHz i7, 8GB RAM) I'm able to run the do\_all() method on
-more than 1,100 URLs per second. That should be enough for everyone. :)
+On my MacBook Pro (2.66GHz i7, 8GB RAM) running Perl 5.14.2, I'm able to
+run the do\_all() method on more than 1,100 URLs per second. This is just
+a number, as the performance depends on the complexity of the URL.
 
 # SEE ALSO
 
