@@ -1,7 +1,12 @@
 Revision history for URL::Normalize
 
 
-0.06    2012-MM-DD
+0.07    2012-10-30
+        - Renamed several of the tests' filename.
+        - Improved the documentation.
+
+
+0.06    2012-10-30
         - Added remove_duplicate_query_parameters() method.
         - Added remove_empty_query_parameters() method.
         - Added more tests.

@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.05
+Version 0.07
 
 # SYNOPSIS
 
@@ -26,6 +26,34 @@ Version 0.05
     $Normalizer->do_all(); # Perform all the normalizations available
 
     print $Normalizer->get_url();
+
+# DESCRIPTION
+
+This is NOT a perfect solution. If you normalize a URL using all the methods in
+this module, there is a high probability that the URL will "stop working". This
+is merely a helper module for those of you who wants to either normalize a URL
+using only a few of the safer methods, and/or for those of you who wants to
+generate a unique "ID" from any given URL.
+
+When writing a web crawler, for example, it's always very costly to check if a
+URL has been fetched/seen when you have millions or billions of URLs in a sort
+of database. This module can help you create a unique "ID", which you then can
+use as a key in a key/value-store; the key is the normalized URL, whereas all
+the URLs that converts to the normalized URL are part of the value (normally an
+array or hash);
+
+    'http://www.example.com/' = {
+        'http://www.example.com:80/'        => 1,
+        'http://www.example.com/index.html' => 1,
+        'http://www.example.com/?'          => 1,
+    }
+
+Above, all the URLs inside the has normalizes to the key if you run these
+methods:
+
+- `make_canonical()`
+- `remove_directory_index()`
+- `remove_empty_query()`
 
 # CONSTRUCTORS
 
@@ -106,6 +134,35 @@ Example:
 
     print $Normalizer->get_url(); # http://www.example.com/?a=0&A=1&b=2&c=3
 
+## remove\_duplicate\_query\_parameters()
+
+Removes duplicate query parameters, ie. where the key/value combination is
+identical with another key/value combination.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/?a=1&a=2&b=4&a=1&c=4',
+    );
+
+    $Normalizer->remove_duplicate_query_parameters();
+
+    print $Normalizer->get_url(); # http://www.example.com/?a=1&a=2&b=3&c=4
+
+## remove\_empty\_query\_parameters()
+
+Removes empty query parameters, ie. where there are keys with no value.
+
+Example:
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/?a=1&b=&c=3',
+    );
+
+    $Normalize->remove_empty_query_parameters();
+
+    print $Normalizer->get_url(); # http://www.example.com/?a=1&c=3
+
 ## remove\_empty\_query()
 
 Removes empty query from the URL.
@@ -122,8 +179,7 @@ Example:
 
 ## remove\_fragment()
 
-Removes fragments from the URL. This is dangerous, as lot of AJAX-ified
-applications uses this part.
+Removes fragments from the URL.
 
 Example:
 
@@ -152,6 +208,15 @@ Example:
 ## do\_all()
 
 Performs all of the normalization methods mentioned above.
+
+# PERFORMANCE
+
+There's probably possible to improve the performance of this module
+considerably, but as premature optimization is evil, I'll wait until the
+functionality and API is stable.
+
+On my MacBook Pro (2.66GHz i7, 8GB RAM) I'm able to run the do\_all() method on
+more than 1,100 URLs per second. That should be enough for everyone. :)
 
 # SEE ALSO
 
