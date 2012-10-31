@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -33,23 +33,6 @@ has 'base' => (
     default  => '',
     reader   => 'get_base',
 );
-
-has 'URI'  => (
-    isa     => 'URI',
-    is      => 'ro',
-    lazy    => 1,
-    builder => '_build_URI',
-    reader  => 'get_URI'
-);
-
-#
-# Builders
-#
-sub _build_URI {
-    my $self = shift;
-
-    return URI->new( $self->get_url(), $self->get_base() );
-}
 
 =head1 SYNOPSIS
 
@@ -127,6 +110,12 @@ Returns the C<URI> object representing the current state of the URL.
 
 =cut
 
+sub get_URI {
+    my $self = shift;
+
+    return URI->new( $self->get_url(), $self->get_base() );
+}
+
 =head2 make_canonical()
 
 Just a shortcut for URI::URL->new()->canonical()->as_string(), and involves
@@ -167,7 +156,7 @@ sub make_canonical {
 
 =head2 remove_dot_segments()
 
-The segments ".."" and "." will be removed from the URL according to the
+The segments ".." and "." will be removed from the URL according to the
 algorithm described in RFC 3986.
 
 Example:
@@ -598,12 +587,12 @@ sub do_all {
     $self->remove_dot_segments();
     $self->remove_directory_index();
     $self->sort_query_parameters();
-    $self->remove_empty_query();
     $self->remove_fragment();
     $self->remove_duplicate_slashes();
     $self->remove_duplicate_query_parameters();
     $self->remove_empty_query_parameters();
     $self->remove_hostname_prefix();
+    $self->remove_empty_query();
 
     return 1;
 }
