@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.08
+Version 0.10
 
 # SYNOPSIS
 
@@ -48,7 +48,7 @@ array or hash);
         'http://www.example.com/?'          => 1,
     }
 
-Above, all the URLs inside the has normalizes to the key if you run these
+Above, all the URLs inside the hash normalizes to the key if you run these
 methods:
 
 - `make_canonical()`
@@ -72,6 +72,14 @@ Constructs a new URL::Normalize object. Takes a hash as input argument;
 
 Returns the `URI` object representing the current state of the URL.
 
+## get\_url()
+
+Returns the current URL.
+
+## get\_base()
+
+Returns the current base.
+
 ## make\_canonical()
 
 Just a shortcut for URI::URL->new()->canonical()->as\_string(), and involves
@@ -94,7 +102,7 @@ Example:
 
 ## remove\_dot\_segments()
 
-The segments ".."" and "." will be removed from the URL according to the
+The segments ".." and "." will be removed from the URL according to the
 algorithm described in RFC 3986.
 
 Example:

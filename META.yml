@@ -3,7 +3,6 @@ abstract: 'Normalize/optimize URLs.'
 author:
   - 'Tore Aursand <toreau@gmail.com>'
 build_requires:
-  Moose: 0
   Test::More: 0
   URI: 0
   URI::QueryParam: 0
@@ -19,7 +18,7 @@ name: URL-Normalize
 provides:
   URL::Normalize:
     file: lib/URL/Normalize.pm
-    version: 0.09
+    version: 0.10
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.09
+version: 0.10

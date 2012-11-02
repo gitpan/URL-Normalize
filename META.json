@@ -16,7 +16,6 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Moose" : "0",
             "Test::More" : "0",
             "URI" : "0",
             "URI::QueryParam" : "0"
@@ -31,7 +30,7 @@
    "provides" : {
       "URL::Normalize" : {
          "file" : "lib/URL/Normalize.pm",
-         "version" : "0.09"
+         "version" : "0.10"
       }
    },
    "release_status" : "stable",
@@ -40,5 +39,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.09"
+   "version" : "0.10"
 }

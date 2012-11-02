@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 5;
+use Test::More tests => 9;
 
 BEGIN {
     use_ok( 'URL::Normalize' );
@@ -21,6 +21,10 @@ BEGIN {
         'http://www.example.com/../a/b/../c/./d.html?foo=../bar' => 'http://www.example.com/a/c/d.html?foo=../bar',
         'http://www.example.com/foo/../bar'                      => 'http://www.example.com/bar',
         'http://www.example.com/foo/../bar/'                     => 'http://www.example.com/bar/',
+        'http://www.example.com/../foo'                          => 'http://www.example.com/foo',
+        'http://www.example.com/../foo/..'                       => 'http://www.example.com/',
+        'http://www.example.com/../../'                          => 'http://www.example.com/',
+        'http://www.example.com/../../foo'                       => 'http://www.example.com/foo',
     );
 
     foreach ( keys %urls ) {
