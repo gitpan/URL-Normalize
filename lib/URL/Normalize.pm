@@ -8,31 +8,22 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
+
+our $DIRECTORY_INDEX_REGEXPS = [
+    '/default\.aspx?',
+    '/index\.cgi',
+    '/index\.php\d?',
+    '/index\.pl',
+    '/index\.s?html?',
+];
 
 use URI qw();
 use URI::QueryParam qw();
-
-# has 'url'  => (
-#     isa      => 'Str',
-#     is       => 'ro',
-#     required => 1,
-#     default  => '',
-#     reader   => 'get_url',
-#     writer   => '_set_url',
-# );
-
-# has 'base' => (
-#     isa      => 'Str',
-#     is       => 'ro',
-#     required => 0,
-#     default  => '',
-#     reader   => 'get_base',
-# );
 
 =head1 SYNOPSIS
 
@@ -85,6 +76,14 @@ sub _init {
     if ( defined $opts{base} && length $opts{base} ) {
         $self->{base} = $opts{base};
     }
+
+    return 1;
+}
+
+sub DESTROY {
+    my $self = shift;
+
+    return 1;
 }
 
 =head1 DESCRIPTION
@@ -148,18 +147,18 @@ sub get_URI {
     return URI->new( $self->get_url(), $self->get_base() );
 }
 
+=head2 get_url()
+
+Returns the current URL.
+
+=cut
+
 sub _get {
     my $self = shift;
     my $key  = shift;
 
     return $self->{$key} || '';
 }
-
-=head2 get_url()
-
-Returns the current URL.
-
-=cut
 
 sub get_url {
     my $self = shift;
@@ -337,6 +336,19 @@ Example:
 
     print $Normalizer->get_url(); # http://www.example.com/?foo=/
 
+You are free to modify the global C<$DIRECTORY_INDEX_REGEXPS> arrayref to
+your own fitting:
+
+    $URL::Normalize::DIRECTORY_INDEX_REGEXPS = [ ... ];
+
+    my $Normalizer = URL::Normalize->new(
+        url => 'http://www.example.com/index.cgi?foo=/',
+    );
+
+    $Normalizer->remove_directory_index();
+
+    print $Normalizer->get_url(); # whatever
+
 =cut
 
 sub remove_directory_index {
@@ -345,16 +357,8 @@ sub remove_directory_index {
     my $URI  = $self->get_URI();
     my $path = $URI->path();
 
-    my @indexes = (
-        '/default\.aspx?',
-        '/index\.cgi',
-        '/index\.php\d?',
-        '/index\.pl',
-        '/index\.s?html?',
-    );
-
-    foreach my $index ( @indexes ) {
-        $path =~ s,$index,/,;
+    foreach my $regexp ( @{$DIRECTORY_INDEX_REGEXPS} ) {
+        $path =~ s,$regexp,/,;
     }
 
     $URI->path( $path );
