@@ -1,6 +1,11 @@
 Revision history for URL::Normalize
 
 
+0.13    2012-12-18
+        - Upped the number of times remove_dot_segments() can run before
+          giving up.
+
+
 0.12    2012-12-18
         - Fixed a bug in remove_dot_segments() where the removal of multiple
           slashes were too aggressive.

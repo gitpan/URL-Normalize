@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.12
+Version 0.13
 
 =cut
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 our $DIRECTORY_INDEX_REGEXPS = [
     '/default\.aspx?',
@@ -251,10 +251,11 @@ sub remove_dot_segments {
     my $loop_cnt = 0;
 
     while ( length $old_path ) {
+
         #
         # Have we been running for too long?
         #
-        if ( ++$loop_cnt > 10 ) {
+        if ( ++$loop_cnt > 10_000 ) {
             Carp::croak( "remove_dot_segments() have been running for too long for URL '" . $URI . "'. Bailing out." );
         }
 
@@ -314,6 +315,7 @@ sub remove_dot_segments {
                 $old_path =~ s,^\Q$first_path_segment\E,,;
             }
         }
+
     }
 
     #
