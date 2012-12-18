@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.11
+Version 0.12
 
 =cut
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 our $DIRECTORY_INDEX_REGEXPS = [
     '/default\.aspx?',
@@ -254,8 +254,8 @@ sub remove_dot_segments {
         #
         # Have we been running for too long?
         #
-        if ( ++$loop_cnt > 1_000 ) {
-            Carp::croak( "remove_dot_segments() have been running for too long. Bailing out." );
+        if ( ++$loop_cnt > 10 ) {
+            Carp::croak( "remove_dot_segments() have been running for too long for URL '" . $URI . "'. Bailing out." );
         }
 
         #
@@ -265,6 +265,7 @@ sub remove_dot_segments {
         if ( $old_path =~ m,^\.\.?/, ) {
             $old_path =~ s,^\.\.?/,,;
         }
+
         #
         # Otherwise, if the input buffer begins with a prefix of "/./" or "/.",
         # where "." is a complete path segment, then replace that prefix with
@@ -273,6 +274,7 @@ sub remove_dot_segments {
         elsif ( $old_path =~ m,^/\./, ) {
             $old_path =~ s,^/\./,/,;
         }
+
         #
         # Otherwise, if the input buffer begins with a prefix of "/../" or
         # "/..", where ".." is a complete path segment, then replace that
@@ -286,9 +288,10 @@ sub remove_dot_segments {
         # (continued from above)
         #
         elsif ( $old_path =~ m,^(/\.\./?), ) {
-            $old_path =~ s,^$1,/,;
+            $old_path =~ s,^$1,,;
             $new_path =~ s,[^/]+$,,;
         }
+
         #
         # Otherwise, if the input buffer consists only of "." or "..", then
         # remove that from the input buffer;
@@ -296,6 +299,7 @@ sub remove_dot_segments {
         elsif ( $old_path eq '.' || $old_path eq '..' ) {
             $old_path = '';
         }
+
         #
         # Otherwise, move the first path segment in the input buffer to the
         # end of the output buffer, including the initial "/" character (if
@@ -307,13 +311,23 @@ sub remove_dot_segments {
                 my $first_path_segment = $1;
 
                 $new_path .= $first_path_segment;
-                $old_path =~ s,^$first_path_segment,,;
+                $old_path =~ s,^\Q$first_path_segment\E,,;
             }
         }
-
-        $new_path =~ s,/+,/,g;
     }
 
+    #
+    # Make sure URLs with no path ends with a '/', but not sure if e.g.
+    # http://www.example.com/ should normalize to http://www.example.com/
+    # or http://www.example.com
+    #
+    unless ( length $new_path ) {
+        $new_path = '/';
+    }
+
+    #
+    # Set the new path
+    #
     $URI->path( $new_path );
 
     #

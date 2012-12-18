@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 9;
+use Test::More tests => 11;
 
 BEGIN {
     use_ok( 'URL::Normalize' );
@@ -17,14 +17,16 @@ BEGIN {
     # algorithm).
     #
     my %urls = (
-        'http://www.example.com/../a/b/../c/./d.html'            => 'http://www.example.com/a/c/d.html',
-        'http://www.example.com/../a/b/../c/./d.html?foo=../bar' => 'http://www.example.com/a/c/d.html?foo=../bar',
-        'http://www.example.com/foo/../bar'                      => 'http://www.example.com/bar',
-        'http://www.example.com/foo/../bar/'                     => 'http://www.example.com/bar/',
-        'http://www.example.com/../foo'                          => 'http://www.example.com/foo',
-        'http://www.example.com/../foo/..'                       => 'http://www.example.com/',
-        'http://www.example.com/../../'                          => 'http://www.example.com/',
-        'http://www.example.com/../../foo'                       => 'http://www.example.com/foo',
+        'http://www.example.com/'                                                            => 'http://www.example.com/',
+        'http://www.example.com/../a/b/../c/./d.html'                                        => 'http://www.example.com/a/c/d.html',
+        'http://www.example.com/../a/b/../c/./d.html?foo=../bar'                             => 'http://www.example.com/a/c/d.html?foo=../bar',
+        'http://www.example.com/foo/../bar'                                                  => 'http://www.example.com/bar',
+        'http://www.example.com/foo/../bar/'                                                 => 'http://www.example.com/bar/',
+        'http://www.example.com/../foo'                                                      => 'http://www.example.com/foo',
+        'http://www.example.com/../foo/..'                                                   => 'http://www.example.com/',
+        'http://www.example.com/../../'                                                      => 'http://www.example.com/',
+        'http://www.example.com/../../foo'                                                   => 'http://www.example.com/foo',
+        'http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http://www.dagbladet.no/tag/adam+lanza' => 'http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http://www.dagbladet.no/tag/adam+lanza',
     );
 
     foreach ( keys %urls ) {
@@ -39,3 +41,6 @@ BEGIN {
 }
 
 done_testing();
+
+# http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http://www.dagbladet.no/tag/adam+lanza
+# http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http:/www.dagbladet.no/tag/adam+lanza
