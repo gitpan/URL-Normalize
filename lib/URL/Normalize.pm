@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.13
+Version 0.14
 
 =cut
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 our $DIRECTORY_INDEX_REGEXPS = [
     '/default\.aspx?',
@@ -75,6 +75,10 @@ sub _init {
 
     if ( defined $opts{base} && length $opts{base} ) {
         $self->{base} = $opts{base};
+    }
+
+    unless ( $self->get_URI()->scheme() ) {
+        Carp::croak( "Illegal 'url' and/or 'base' values!" );
     }
 
     return 1;
@@ -753,7 +757,7 @@ L<http://search.cpan.org/dist/URL-Normalize/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012 Tore Aursand.
+Copyright 2012-2013 Tore Aursand.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

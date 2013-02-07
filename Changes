@@ -1,6 +1,10 @@
 Revision history for URL::Normalize
 
 
+0.14    2013-02-07
+        - Added URL validity checking. Thanks, @Theo_vanHoesel.
+
+
 0.13    2012-12-18
         - Upped the number of times remove_dot_segments() can run before
           giving up.

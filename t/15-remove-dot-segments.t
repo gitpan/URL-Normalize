@@ -41,6 +41,3 @@ BEGIN {
 }
 
 done_testing();
-
-# http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http://www.dagbladet.no/tag/adam+lanza
-# http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http:/www.dagbladet.no/tag/adam+lanza
