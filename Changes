@@ -1,6 +1,10 @@
 Revision history for URL::Normalize
 
 
+0.15    2013-02-18
+        - Improved error message when illegal URL and/or base is used.
+
+
 0.14    2013-02-07
         - Added URL validity checking. Thanks, @Theo_vanHoesel.
 

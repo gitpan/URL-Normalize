@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.13
+Version 0.15
 
 # SYNOPSIS
 
@@ -300,7 +300,7 @@ You can also look for information at:
 
 # LICENSE AND COPYRIGHT
 
-Copyright 2012 Tore Aursand.
+Copyright 2012-2013 Tore Aursand.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

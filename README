@@ -2,7 +2,7 @@ NAME
     URL::Normalize - Normalize/optimize URLs.
 
 VERSION
-    Version 0.13
+    Version 0.15
 
 SYNOPSIS
         use URL::Normalize;
@@ -48,9 +48,11 @@ DESCRIPTION
     Above, all the URLs inside the hash normalizes to the key if you run
     these methods:
 
-    * `make_canonical()'
-    * `remove_directory_index()'
-    * `remove_empty_query()'
+    *   "make_canonical()"
+
+    *   "remove_directory_index()"
+
+    *   "remove_empty_query()"
 
 CONSTRUCTORS
   new( %opts )
@@ -63,7 +65,7 @@ CONSTRUCTORS
 
 METHODS
   get_URI()
-    Returns the `URI' object representing the current state of the URL.
+    Returns the "URI" object representing the current state of the URL.
 
   get_url()
     Returns the current URL.
@@ -75,10 +77,13 @@ METHODS
     Just a shortcut for URI::URL->new()->canonical()->as_string(), and
     involves the following steps (at least):
 
-    * Converts the scheme and host to lower case.
-    * Capitalizes letters in escape sequences.
-    * Decodes percent-encoded octets of unreserved characters.
-    * Removes the default port (port 80 for http).
+    *   Converts the scheme and host to lower case.
+
+    *   Capitalizes letters in escape sequences.
+
+    *   Decodes percent-encoded octets of unreserved characters.
+
+    *   Removes the default port (port 80 for http).
 
     Example:
 
@@ -118,7 +123,7 @@ METHODS
 
         print $Normalizer->get_url(); # http://www.example.com/?foo=/
 
-    You are free to modify the global `$DIRECTORY_INDEX_REGEXPS' arrayref to
+    You are free to modify the global $DIRECTORY_INDEX_REGEXPS arrayref to
     your own fitting:
 
         $URL::Normalize::DIRECTORY_INDEX_REGEXPS = [ ... ];
@@ -240,18 +245,24 @@ PERFORMANCE
     a number, as the performance depends on the complexity of the URL.
 
 SEE ALSO
-    * URI
-    * URI::URL
-    * URI::QueryParam
-    * RFC 3986: Uniform Resource Indentifier
-    * Wikipedia: URL normalization
+    *   URI
+
+    *   URI::URL
+
+    *   URI::QueryParam
+
+    *   RFC 3986: Uniform Resource Indentifier
+        <http://tools.ietf.org/html/rfc3986>
+
+    *   Wikipedia: URL normalization
+        <http://en.wikipedia.org/wiki/URL_normalization>
 
 AUTHOR
-    Tore Aursand, `<toreau at gmail.com>'
+    Tore Aursand, "<toreau at gmail.com>"
 
 BUGS
     Please report any bugs or feature requests to the web interface at
-    https://github.com/toreau/url-normalize/issues/new.
+    <https://github.com/toreau/url-normalize/issues/new>.
 
 SUPPORT
     You can find documentation for this module with the perldoc command.
@@ -260,26 +271,30 @@ SUPPORT
 
     You can also look for information at:
 
-    * github (report bugs here)
-        https://github.com/toreau/url-normalize/issues
+    *   github (report bugs here)
 
-    * AnnoCPAN: Annotated CPAN documentation
-        http://annocpan.org/dist/URL-Normalize
+        <https://github.com/toreau/url-normalize/issues>
 
-    * CPAN Ratings
-        http://cpanratings.perl.org/d/URL-Normalize
+    *   AnnoCPAN: Annotated CPAN documentation
 
-    * Search CPAN
-        http://search.cpan.org/dist/URL-Normalize/
+        <http://annocpan.org/dist/URL-Normalize>
+
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/URL-Normalize>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/URL-Normalize/>
 
 LICENSE AND COPYRIGHT
-    Copyright 2012 Tore Aursand.
+    Copyright 2012-2013 Tore Aursand.
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the the Artistic License (2.0). You may obtain a copy
     of the full license at:
 
-    http://www.perlfoundation.org/artistic_license_2_0
+    <http://www.perlfoundation.org/artistic_license_2_0>
 
     Any use, modification, and distribution of the Standard or Modified
     Versions is governed by this Artistic License. By using, modifying or

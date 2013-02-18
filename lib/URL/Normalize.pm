@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.14
+Version 0.15
 
 =cut
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 our $DIRECTORY_INDEX_REGEXPS = [
     '/default\.aspx?',
@@ -77,8 +77,10 @@ sub _init {
         $self->{base} = $opts{base};
     }
 
-    unless ( $self->get_URI()->scheme() ) {
-        Carp::croak( "Illegal 'url' and/or 'base' values!" );
+    my $URI = $self->get_URI;
+
+    unless ( $URI->scheme ) {
+        Carp::croak( "Illegal 'url' and/or 'base' values for '$URI'!" );
     }
 
     return 1;
