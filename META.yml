@@ -9,7 +9,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.40
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -18,7 +18,7 @@ name: URL-Normalize
 provides:
   URL::Normalize:
     file: lib/URL/Normalize.pm
-    version: 0.15
+    version: 0.16
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.15
+version: 0.16

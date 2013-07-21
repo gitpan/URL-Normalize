@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 BEGIN {
     use_ok( 'URL::Normalize' );
@@ -12,6 +12,7 @@ BEGIN {
 
 {
     my %urls = (
+        'http://www.example.com?'     => 'http://www.example.com',
         'http://www.example.com/?'    => 'http://www.example.com/',
         'http://www.example.com/foo?' => 'http://www.example.com/foo',
     );

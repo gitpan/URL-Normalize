@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.15
+Version 0.16
 
 =cut
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 our $DIRECTORY_INDEX_REGEXPS = [
     '/default\.aspx?',
@@ -416,32 +416,34 @@ sub sort_query_parameters {
 
     my $URI = $self->get_URI();
 
-    my $query_hash     = $URI->query_form_hash();
-    my $query_string   = '';
-    my %new_query_hash = ();
+    if ( $self->get_URI->as_string =~ m,\?, ) {
+        my $query_hash     = $URI->query_form_hash || {};
+        my $query_string   = '';
+        my %new_query_hash = ();
 
-    foreach my $key ( sort { lc($a) cmp lc($b) } keys %{$query_hash} ) {
-        my $values = $query_hash->{ $key };
-        unless ( ref $values ) {
-            $values = [ $values ];
-        }
+        foreach my $key ( sort { lc($a) cmp lc($b) } keys %{$query_hash} ) {
+            my $values = $query_hash->{ $key };
+            unless ( ref $values ) {
+                $values = [ $values ];
+            }
 
-        foreach my $value ( @{$values} ) {
-            push( @{ $new_query_hash{lc($key)}->{$value} }, $key );
-        }
-    }
-
-    foreach my $sort_key ( sort keys %new_query_hash ) {
-        foreach my $value ( sort keys %{$new_query_hash{$sort_key}} ) {
-            foreach my $key ( @{$new_query_hash{$sort_key}->{$value}} ) {
-                $query_string .= $key . '=' . $value . '&';
+            foreach my $value ( @{$values} ) {
+                push( @{ $new_query_hash{lc($key)}->{$value} }, $key );
             }
         }
+
+        foreach my $sort_key ( sort keys %new_query_hash ) {
+            foreach my $value ( sort keys %{$new_query_hash{$sort_key}} ) {
+                foreach my $key ( @{$new_query_hash{$sort_key}->{$value}} ) {
+                    $query_string .= $key . '=' . $value . '&';
+                }
+            }
+        }
+
+        $query_string =~ s,&$,,;
+
+        $URI->query( $query_string );
     }
-
-    $query_string =~ s,&$,,;
-
-    $URI->query( $query_string );
 
     #
     # Set new 'url' value

@@ -1,5 +1,9 @@
 Revision history for URL::Normalize
 
+0.16    2013-07-21
+        - Only try to sort query parameters if there are query parameters
+          present.
+
 
 0.15    2013-02-18
         - Improved error message when illegal URL and/or base is used.
