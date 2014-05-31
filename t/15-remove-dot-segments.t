@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 BEGIN {
     use_ok( 'URL::Normalize' );
@@ -27,17 +27,18 @@ BEGIN {
         'http://www.example.com/../../'                                                      => 'http://www.example.com/',
         'http://www.example.com/../../foo'                                                   => 'http://www.example.com/foo',
         'http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http://www.dagbladet.no/tag/adam+lanza' => 'http://go.dagbladet.no/ego.cgi/dbf_tagcloud/http://www.dagbladet.no/tag/adam+lanza',
+        'http://www.example.org/a/b/../../index.html'                                        => 'http://www.example.org/index.html',
     );
 
     foreach ( keys %urls ) {
-        my $Normalizer = URL::Normalize->new(
+        my $normalizer = URL::Normalize->new(
             url => $_,
         );
 
-        $Normalizer->remove_dot_segments();
+        $normalizer->remove_dot_segments;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url() );
+        ok( $normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_} - got " . $normalizer->get_url );
     }
 }
 
-done_testing();
+done_testing;

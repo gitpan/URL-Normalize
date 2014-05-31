@@ -4,28 +4,28 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.16
+Version 0.17
 
 # SYNOPSIS
 
     use URL::Normalize;
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/display?lang=en&article=fred',
     );
 
     # ...or
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url  => '/display?lang=en&article=fred',
         base => 'http://www.example.com',
     );
 
     # Get a normalized URL back
 
-    $Normalizer->do_all(); # Perform all the normalizations available
+    $normalizer->do_all; # Perform all the normalizations available
 
-    print $Normalizer->get_url();
+    print $normalizer->get_url;
 
 # DESCRIPTION
 
@@ -51,9 +51,9 @@ array or hash);
 Above, all the URLs inside the hash normalizes to the key if you run these
 methods:
 
-- `make_canonical()`
-- `remove_directory_index()`
-- `remove_empty_query()`
+- `make_canonical`
+- `remove_directory_index`
+- `remove_empty_query`
 
 # CONSTRUCTORS
 
@@ -61,29 +61,29 @@ methods:
 
 Constructs a new URL::Normalize object. Takes a hash as input argument;
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url  => '/foobar.html',            # required
         base => 'http://www.example.com/', # optional
     );
 
 # METHODS
 
-## get\_URI()
+## get\_URI
 
 Returns the `URI` object representing the current state of the URL.
 
-## get\_url()
+## get\_url
 
 Returns the current URL.
 
-## get\_base()
+## get\_base
 
 Returns the current base.
 
-## make\_canonical()
+## make\_canonical
 
-Just a shortcut for URI::URL->new()->canonical()->as\_string(), and involves
-the following steps (at least):
+Just a shortcut for URI::URL->new->canonical->as\_string, and involves the
+following steps (at least):
 
 - Converts the scheme and host to lower case.
 - Capitalizes letters in escape sequences.
@@ -92,57 +92,53 @@ the following steps (at least):
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/%7Eusername/',
     );
 
-    $Normalize->make_canonical();
+    $Normalize->make_canonical;
 
-    print $Normalize->get_url(); # http://www.example.com/~username/
+    print $Normalize->get_url; # http://www.example.com/~username/
 
-## remove\_dot\_segments()
+## remove\_dot\_segments
 
-The segments ".." and "." will be removed from the URL according to the
-algorithm described in RFC 3986.
+The segments ".." and "." will be removed and "folded" (or flattened, if you
+prefer) from the URL.
+
+This method does NOT follor the algorithm described in RFC 3986, but rather
+flattens each path segment. It works just as well, it seems, but keep in mind
+that it also doesn't account for symbolic links on the server side.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/../a/b/../c/./d.html',
     );
 
-    $Normalize->remove_dot_segments();
+    $normalizer->remove_dot_segments;
 
-    print $Normalize->get_url(); # http://www.example.com/a/c/d.html
+    print $normalizer->get_url; # http://www.example.com/a/c/d.html
 
-## remove\_directory\_index()
+## remove\_directory\_index
 
 Removes well-known directory indexes, eg. "index.html", "default.asp" etc.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/index.cgi?foo=/',
     );
 
-    $Normalizer->remove_directory_index();
+    $normalizer->remove_directory_index;
 
-    print $Normalizer->get_url(); # http://www.example.com/?foo=/
+    print $normalizer->get_url; # http://www.example.com/?foo=/
 
 You are free to modify the global `$DIRECTORY_INDEX_REGEXPS` arrayref to
 your own fitting:
 
     $URL::Normalize::DIRECTORY_INDEX_REGEXPS = [ ... ];
 
-    my $Normalizer = URL::Normalize->new(
-        url => 'http://www.example.com/index.cgi?foo=/',
-    );
-
-    $Normalizer->remove_directory_index();
-
-    print $Normalizer->get_url(); # whatever
-
-## sort\_query\_parameters()
+## sort\_query\_parameters
 
 Sorts the query parameters alphabetically.
 
@@ -151,100 +147,125 @@ multiple values for a parameter, the key/value-pairs will be sorted as well.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/?b=2&c=3&a=0&A=1',
     );
 
-    $Normalizer->sort_query_parameters();
+    $normalizer->sort_query_parameters;
 
-    print $Normalizer->get_url(); # http://www.example.com/?a=0&A=1&b=2&c=3
+    print $normalizer->get_url; # http://www.example.com/?a=0&A=1&b=2&c=3
 
-## remove\_duplicate\_query\_parameters()
+## remove\_duplicate\_query\_parameters
 
 Removes duplicate query parameters, ie. where the key/value combination is
 identical with another key/value combination.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/?a=1&a=2&b=4&a=1&c=4',
     );
 
-    $Normalizer->remove_duplicate_query_parameters();
+    $normalizer->remove_duplicate_query_parameters;
 
-    print $Normalizer->get_url(); # http://www.example.com/?a=1&a=2&b=3&c=4
+    print $normalizer->get_url; # http://www.example.com/?a=1&a=2&b=3&c=4
 
-## remove\_empty\_query\_parameters()
+## remove\_empty\_query\_parameters
 
 Removes empty query parameters, ie. where there are keys with no value.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/?a=1&b=&c=3',
     );
 
-    $Normalize->remove_empty_query_parameters();
+    $Normalize->remove_empty_query_parameters;
 
-    print $Normalizer->get_url(); # http://www.example.com/?a=1&c=3
+    print $normalizer->get_url; # http://www.example.com/?a=1&c=3
 
-## remove\_empty\_query()
+## remove\_empty\_query
 
 Removes empty query from the URL.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/foo?',
     );
 
-    $Normalizer->remove_empty_query();
+    $normalizer->remove_empty_query;
 
-    print $Normalize->get_url(); # http://www.example.com/foo
+    print $Normalize->get_url; # http://www.example.com/foo
 
-## remove\_fragment()
+## remove\_fragment
 
-Removes fragments from the URL.
+Removes the fragment from the URL, but only if they are at the end of the URL.
+
+For example "http://www.example.com/#foo" will be translated to
+"http://www.example.com/", but "http://www.example.com/#foo/bar" will stay the
+same.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/bar.html#section1',
     );
 
-    $Normalizer->remove_fragment();
+    $normalizer->remove_fragment;
 
-    print $Normalizer->get_url(); # http://www.example.com/bar.html
+    print $normalizer->get_url; # http://www.example.com/bar.html
 
-## remove\_duplicate\_slashes()
+You should probably use this with caution, as most web frameworks today allows
+fragments for logic, for example:
+
+    http://www.example.com/players#all
+    http://www.example.com/players#banned
+    http://www.example.com/players#top
+
+...can all result in very different results, despite their "unfragmented" URL
+being the same.
+
+## remove\_fragments
+
+Removes EVERYTHING after a '#'. You should use this sparsely, because a lot
+of web applications these days returns different output in response to what
+the fragment is, for example:
+
+    http://www.example.com/users#list
+    http://www.example.com/users#edit
+
+...etc.
+
+## remove\_duplicate\_slashes
 
 Remove duplicate slashes from the URL.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/foo//bar.html',
     );
 
-    $Normalizer->remove_duplicate_slashes();
+    $normalizer->remove_duplicate_slashes;
 
-    print $Normalizer->get_url(); # http://www.example.com/foo/bar.html
+    print $normalizer->get_url; # http://www.example.com/foo/bar.html
 
-## remove\_hostname\_prefix()
+## remove\_hostname\_prefix
 
 Removes 'www' followed by a potential number before the actual hostname.
 
 Example:
 
-    my $Normalizer = URL::Normalize->new(
+    my $normalizer = URL::Normalize->new(
         url => 'http://www.example.com/',
     );
 
-    $Normalizer->remove_hostname_prefix();
+    $normalizer->remove_hostname_prefix;
 
-    print $Normalizer->get_url(); # http://example.com/
+    print $normalizer->get_url; # http://example.com/
 
-## do\_all()
+## do\_all
 
 Performs all of the normalization methods mentioned above.
 
@@ -260,11 +281,11 @@ a number, as the performance depends on the complexity of the URL.
 
 # SEE ALSO
 
-- [URI](http://search.cpan.org/perldoc?URI)
-- [URI::URL](http://search.cpan.org/perldoc?URI::URL)
-- [URI::QueryParam](http://search.cpan.org/perldoc?URI::QueryParam)
+- [URI](https://metacpan.org/pod/URI)
+- [URI::URL](https://metacpan.org/pod/URI::URL)
+- [URI::QueryParam](https://metacpan.org/pod/URI::QueryParam)
 - [RFC 3986: Uniform Resource Indentifier](http://tools.ietf.org/html/rfc3986)
-- [Wikipedia: URL normalization](http://en.wikipedia.org/wiki/URL\_normalization)
+- [Wikipedia: URL normalization](http://en.wikipedia.org/wiki/URL_normalization)
 
 # AUTHOR
 
@@ -272,7 +293,7 @@ Tore Aursand, `<toreau at gmail.com>`
 
 # BUGS
 
-Please report any bugs or feature requests to the web interface at [https://github.com/toreau/url-normalize/issues/new](https://github.com/toreau/url-normalize/issues/new).
+Please report any bugs or feature requests to the web interface at [https://rt.cpan.org/Dist/Display.html?Name=URL-Normalize](https://rt.cpan.org/Dist/Display.html?Name=URL-Normalize)
 
 # SUPPORT
 
@@ -281,10 +302,6 @@ You can find documentation for this module with the perldoc command.
     perldoc URL::Normalize
 
 You can also look for information at:
-
-- github (report bugs here)
-
-    [https://github.com/toreau/url-normalize/issues](https://github.com/toreau/url-normalize/issues)
 
 - AnnoCPAN: Annotated CPAN documentation
 
@@ -300,13 +317,13 @@ You can also look for information at:
 
 # LICENSE AND COPYRIGHT
 
-Copyright 2012-2013 Tore Aursand.
+Copyright 2012-2014 Tore Aursand.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
 copy of the full license at:
 
-[http://www.perlfoundation.org/artistic\_license\_2\_0](http://www.perlfoundation.org/artistic\_license\_2\_0)
+[http://www.perlfoundation.org/artistic\_license\_2\_0](http://www.perlfoundation.org/artistic_license_2_0)
 
 Any use, modification, and distribution of the Standard or Modified
 Versions is governed by this Artistic License. By using, modifying or
