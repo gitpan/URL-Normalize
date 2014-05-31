@@ -16,4 +16,4 @@ meta-spec:
 name: URL-Normalize
 requires:
   URI: '1.60'
-version: '0.17'
+version: '0.18'

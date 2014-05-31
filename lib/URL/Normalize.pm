@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.17
+Version 0.18
 
 =cut
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 our $DIRECTORY_INDEX_REGEXPS = [
     '/default\.aspx?',
@@ -163,7 +163,7 @@ sub _get {
     my $self = shift;
     my $key  = shift;
 
-    return $self->{$key} // '';
+    return ( defined($self->{$key}) && length($self->{$key}) ) ? $self->{$key} : '';
 }
 
 sub get_url {
@@ -664,18 +664,6 @@ sub do_all {
 
     return 1;
 }
-
-=head1 PERFORMANCE
-
-There's probably possible to improve the performance of this module
-considerably, but as premature optimization is evil, I'll wait until the
-functionality and API is stable.
-
-On my MacBook Pro (2.66GHz i7, 8GB RAM) running Perl 5.14.2, I'm able to
-run the do_all() method on more than 1,100 URLs per second. This is just
-a number, as the performance depends on the complexity of the URL.
-
-=cut
 
 =head1 SEE ALSO
 

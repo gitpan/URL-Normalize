@@ -1,5 +1,8 @@
 Revision history for URL::Normalize
 
+0.18    2014-05-31
+        - Improved support for older Perl versions.
+
 0.17    2014-05-31
         - remove_fragment does NOT remove the fragment (#whatever) if they
           are part of the "logical" path, ie. "http://www.ex.com/#foo/bar"
