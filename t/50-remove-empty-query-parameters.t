@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 BEGIN {
     use_ok( 'URL::Normalize' );
@@ -12,7 +12,8 @@ BEGIN {
 
 {
     my %urls = (
-        'http://www.example.com/?a=1&b=&c=3' => 'http://www.example.com/?a=1&c=3',
+        'http://www.example.com/?a=1&b=&c=3'    => 'http://www.example.com/?a=1&c=3',
+        'http://www.example.com/?a=&a=1&b=&c=3' => 'http://www.example.com/?a=1&c=3',
     );
 
     foreach ( keys %urls ) {

@@ -19,7 +19,7 @@ t/40-remove-duplicate-slashes.t
 t/45-remove-duplicate-query-parameters.t
 t/50-remove-empty-query-parameters.t
 t/55-remove-hostname-prefix.t
-t/boilerplate.t
+t/60-remove-social-query-parameters.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t

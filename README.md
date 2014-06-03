@@ -4,7 +4,7 @@ URL::Normalize - Normalize/optimize URLs.
 
 # VERSION
 
-Version 0.18
+Version 0.19
 
 # SYNOPSIS
 
@@ -138,6 +138,16 @@ your own fitting:
 
     $URL::Normalize::DIRECTORY_INDEX_REGEXPS = [ ... ];
 
+Default values are:
+
+    $DIRECTORY_INDEX_REGEXPS = [
+        '/default\.aspx?',
+        '/index\.cgi',
+        '/index\.php\d?',
+        '/index\.pl',
+        '/index\.s?html?',
+    ];
+
 ## sort\_query\_parameters
 
 Sorts the query parameters alphabetically.
@@ -264,6 +274,29 @@ Example:
     $normalizer->remove_hostname_prefix;
 
     print $normalizer->get_url; # http://example.com/
+
+## remove\_social\_query\_parameters
+
+Removes query parameters that are used for "social tracking".
+
+For example, a lot of newspapers posts links to their articles on Twitter,
+and adds a lot of "noisee" in the URL so that they are able to track the
+number of users clicking on that specific URL. This method attempts to
+remove those query parameters.
+
+You are free to modify the global `$SOCIAL_QUERY_PARAMETERS` arrayref to
+your own fitting:
+
+    $URL::Normalize::SOCIAL_QUERY_PARAMETERS = [ ... ];
+
+Default values are:
+
+    $SOCIAL_QUERY_PARAMETERS = [
+        'ncid',
+        'utm_campaign',
+        'utm_medium',
+        'utm_source',
+    ];
 
 ## do\_all
 

@@ -8,19 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.18
+Version 0.19
 
 =cut
 
-our $VERSION = '0.18';
-
-our $DIRECTORY_INDEX_REGEXPS = [
-    '/default\.aspx?',
-    '/index\.cgi',
-    '/index\.php\d?',
-    '/index\.pl',
-    '/index\.s?html?',
-];
+our $VERSION = '0.19';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -307,7 +299,25 @@ your own fitting:
 
     $URL::Normalize::DIRECTORY_INDEX_REGEXPS = [ ... ];
 
+Default values are:
+
+    $DIRECTORY_INDEX_REGEXPS = [
+        '/default\.aspx?',
+        '/index\.cgi',
+        '/index\.php\d?',
+        '/index\.pl',
+        '/index\.s?html?',
+    ];
+
 =cut
+
+our $DIRECTORY_INDEX_REGEXPS = [
+    '/default\.aspx?',
+    '/index\.cgi',
+    '/index\.php\d?',
+    '/index\.pl',
+    '/index\.s?html?',
+];
 
 sub remove_directory_index {
     my $self = shift;
@@ -458,24 +468,18 @@ sub remove_empty_query_parameters {
 
     my $URI = $self->get_URI;
 
-    my $query_string = '';
-
     foreach my $key ( $URI->query_param ) {
         my @values = $URI->query_param( $key );
+
+        $URI->query_param_delete( $key );
+
         foreach my $value ( @values ) {
             if ( defined $value && length $value ) {
-                $query_string .= $key . '=' . $value . '&';
+                $URI->query_param_append( $key, $value );
             }
         }
     }
 
-    $query_string =~ s,&$,,;
-
-    $URI->query( $query_string );
-
-    #
-    # Set new 'url' value
-    #
     return $self->_set_url( $URI->as_string );
 }
 
@@ -642,6 +646,57 @@ sub remove_hostname_prefix {
     $self->_set_url( $URI->as_string );
 }
 
+=head2 remove_social_query_parameters
+
+Removes query parameters that are used for "social tracking".
+
+For example, a lot of newspapers posts links to their articles on Twitter,
+and adds a lot of "noisee" in the URL so that they are able to track the
+number of users clicking on that specific URL. This method attempts to
+remove those query parameters.
+
+You are free to modify the global C<$SOCIAL_QUERY_PARAMETERS> arrayref to
+your own fitting:
+
+    $URL::Normalize::SOCIAL_QUERY_PARAMETERS = [ ... ];
+
+Default values are:
+
+    $SOCIAL_QUERY_PARAMETERS = [
+        'ncid',
+        'utm_campaign',
+        'utm_medium',
+        'utm_source',
+    ];
+
+=cut
+
+our $SOCIAL_QUERY_PARAMETERS = [
+    'ncid',
+    'utm_campaign',
+    'utm_medium',
+    'utm_source',
+];
+
+sub remove_social_query_parameters {
+    my $self = shift;
+
+    my $URI = $self->get_URI;
+
+    #
+    # Remove unwanted query parameters
+    #
+    foreach ( @{$SOCIAL_QUERY_PARAMETERS} ) {
+        $URI->query_param_delete( $_ );
+    }
+
+    #
+    # Set new 'url' value
+    #
+    $self->_set_url( $URI->as_string );
+
+}
+
 =head2 do_all
 
 Performs all of the normalization methods mentioned above.
@@ -661,6 +716,7 @@ sub do_all {
     $self->remove_empty_query_parameters;
     $self->remove_hostname_prefix;
     $self->remove_empty_query;
+    $self->remove_social_query_parts;
 
     return 1;
 }

@@ -1,5 +1,10 @@
 Revision history for URL::Normalize
 
+0.19    2014-06-03
+        - Added remove_social_query_parameters method.
+        - Improved the remove_empty_query_parameters method.
+        - Improved the documentation.
+
 0.18    2014-05-31
         - Improved support for older Perl versions.
 
