@@ -28,9 +28,9 @@ BEGIN {
             url => $_,
         );
 
-        $Normalizer->make_canonical();
+        $Normalizer->make_canonical;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_}" );
+        ok( $Normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_}" );
     }
 }
 
@@ -49,9 +49,9 @@ BEGIN {
             url => $_,
         );
 
-        $Normalizer->make_canonical();
+        $Normalizer->make_canonical;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_}" );
+        ok( $Normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_}" );
     }
 }
 
@@ -74,9 +74,9 @@ BEGIN {
             url => $_,
         );
 
-        $Normalizer->make_canonical();
+        $Normalizer->make_canonical;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_}" );
+        ok( $Normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_}" );
     }
 }
 
@@ -98,10 +98,10 @@ BEGIN {
             url => $_,
         );
 
-        $Normalizer->make_canonical();
+        $Normalizer->make_canonical;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_}" );
+        ok( $Normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_}" );
     }
 }
 
-done_testing();
+done_testing;

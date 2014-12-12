@@ -21,10 +21,10 @@ BEGIN {
             url => $_,
         );
 
-        $Normalizer->remove_empty_query_parameters();
+        $Normalizer->remove_empty_query_parameters;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url() );
+        ok( $Normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url );
     }
 }
 
-done_testing();
+done_testing;

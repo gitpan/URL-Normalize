@@ -24,3 +24,5 @@ while ( my ($input, $output) = each %tests ) {
 
     is( $normalize->get_url, $output, 'Removed social query parts.' );
 }
+
+done_testing;

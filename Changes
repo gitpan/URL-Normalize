@@ -1,5 +1,10 @@
 Revision history for URL::Normalize
 
+0.20    2014-12-12
+        - Added url method, which is an alias for get_url.
+        - Upped URI version requirement to 1.65.
+        - Improved the documentation.
+
 0.19    2014-06-03
         - Added remove_social_query_parameters method.
         - Improved the remove_empty_query_parameters method.

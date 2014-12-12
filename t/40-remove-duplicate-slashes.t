@@ -24,10 +24,10 @@ BEGIN {
             url => $_,
         );
 
-        $Normalizer->remove_duplicate_slashes();
+        $Normalizer->remove_duplicate_slashes;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url() );
+        ok( $Normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url );
     }
 }
 
-done_testing();
+done_testing;

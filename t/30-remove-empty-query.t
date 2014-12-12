@@ -22,10 +22,10 @@ BEGIN {
             url => $_,
         );
 
-        $Normalizer->remove_empty_query();
+        $Normalizer->remove_empty_query;
 
-        ok( $Normalizer->get_url() eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url() );
+        ok( $Normalizer->get_url eq $urls{$_}, "$_ eq $urls{$_} - got " . $Normalizer->get_url );
     }
 }
 
-done_testing();
+done_testing;

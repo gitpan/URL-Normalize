@@ -14,4 +14,4 @@ BEGIN {
 
 diag( "Testing URL::Normalize $URL::Normalize::VERSION, Perl $], $^X" );
 
-done_testing();
+done_testing;

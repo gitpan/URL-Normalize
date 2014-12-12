@@ -37,4 +37,4 @@ BEGIN {
     }
 }
 
-done_testing();
+done_testing;

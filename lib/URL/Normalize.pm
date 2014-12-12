@@ -8,11 +8,11 @@ URL::Normalize - Normalize/optimize URLs.
 
 =head1 VERSION
 
-Version 0.19
+Version 0.20
 
 =cut
 
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 use URI qw();
 use URI::QueryParam qw();
@@ -36,7 +36,7 @@ use URI::QueryParam qw();
 
     $normalizer->do_all; # Perform all the normalizations available
 
-    print $normalizer->get_url;
+    print $normalizer->get_url; # or $normalizer->url;
 
 =cut
 
@@ -164,6 +164,16 @@ sub get_url {
     return $self->_get( 'url' );
 }
 
+=head2 url
+
+Returns the current URL.
+
+=cut
+
+sub url {
+    return shift->get_url;
+}
+
 sub _set_url {
     my $self = shift;
     my $url  = shift;
@@ -226,7 +236,7 @@ sub make_canonical {
 The segments ".." and "." will be removed and "folded" (or flattened, if you
 prefer) from the URL.
 
-This method does NOT follor the algorithm described in RFC 3986, but rather
+This method does NOT follow the algorithm described in RFC 3986, but rather
 flattens each path segment. It works just as well, it seems, but keep in mind
 that it also doesn't account for symbolic links on the server side.
 
@@ -342,7 +352,7 @@ sub remove_directory_index {
 
 Sorts the query parameters alphabetically.
 
-Uppercased parameters will be lower cased during sorting only, and if there are
+Uppercased parameters will be lowercased during sorting only, and if there are
 multiple values for a parameter, the key/value-pairs will be sorted as well.
 
 Example:
@@ -399,7 +409,7 @@ sub sort_query_parameters {
 
 =head2 remove_duplicate_query_parameters
 
-Removes duplicate query parameters, ie. where the key/value combination is
+Removes duplicate query parameters, i.e. where the key/value combination is
 identical with another key/value combination.
 
 Example:
@@ -449,7 +459,7 @@ sub remove_duplicate_query_parameters {
 
 =head2 remove_empty_query_parameters
 
-Removes empty query parameters, ie. where there are keys with no value.
+Removes empty query parameters, i.e. where there are keys with no value.
 
 Example:
 
